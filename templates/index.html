@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>卒業要件チェック</title>
+    <title>学年選択</title>
 </head>
 <body>
-    <h1>新潟大学理学部 数学プログラム 卒業要件チェック</h1>
-    <form method="post">
-        {% for category, required in requirements.items() %}
-            <label>{{ category }}（必要単位数: {{ required }}）:</label>
-            <input type="number" name="{{ category }}" min="0" required><br><br>
-        {% endfor %}
-        <button type="submit">チェック</button>
+    <h2>学年を選択してください</h2>
+    <form action="/check" method="post">
+        <select name="grade">
+            <option value="1">1年</option>
+            <option value="2">2年</option>
+            <option value="3">3年</option>
+            <option value="4">4年</option>
+        </select>
+        <button type="submit">次へ</button>
     </form>
 </body>
 </html>
+
