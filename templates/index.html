@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>卒業要件チェック</title>
+</head>
+<body>
+    <h1>新潟大学理学部 数学プログラム 卒業要件チェック</h1>
+    <form method="post">
+        {% for category, required in requirements.items() %}
+            <label>{{ category }}（必要単位数: {{ required }}）:</label>
+            <input type="number" name="{{ category }}" min="0" required><br><br>
+        {% endfor %}
+        <button type="submit">チェック</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>チェック結果</title>
+</head>
+<body>
+    <h1>卒業要件チェック結果</h1>
+    <ul>
+        {% for category, amount in missing.items() %}
+            <li>{{ category }}：あと {{ amount }} 単位</li>
+        {% endfor %}
+    </ul>
+    <p>合計取得単位数：{{ total_taken }} 単位</p>
+    <p>卒業に必要な合計単位数：124 単位</p>
+    <p>あと {{ total_missing }} 単位必要です。</p>
+    <a href="/">戻る</a>
+</body>
+</html>
