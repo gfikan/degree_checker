@@ -34,16 +34,22 @@ python -m venv degree
 degree\Scripts\activate
 # macOS/Linux:
 source degree/bin/activate
+
 ---
+
 ### 2.必要パッケージのインストール
 ```bash
 pip install -r requirements.txt
+
 ---
+
 ### 3.アプリの起動
 ```bash
 python app.py
 →ブラウザで http://localhost:5000 にアクセス
+
 ---
+
 ## 📁 ディレクトリ構成（例）
 degree-checker/
 ├── app.py
@@ -56,20 +62,27 @@ degree-checker/
 ├── README.md
 └── data/
     └── sample_transcript.csv
+
 ---
+
 ## 📝 TODO（今後の改良案）
 履修済みデータの保存機能
 モバイル対応UI
 学年ごとの進捗表示
 他学科対応（物理プログラムなど）
+
 ---
+
 ## 🧑‍💻 対象ユーザー
 新潟大学理学部 数学プログラムの学生
 自分の卒業要件達成状況をすぐに確認したい方
 履修管理を効率化したい学生全般
+
 ---
+
 ##🙋‍♂️ 制作
 東京科学大学情報理工学院数理・計算科学系　Keito Shimomine（下峰渓人）
 開発・お問い合わせは GitHub Issues まで。
+
 ---
 
