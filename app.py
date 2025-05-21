@@ -5,12 +5,17 @@ from werkzeug.utils import secure_filename
 import json
 
 app = Flask(__name__)
-DB_PATH = 'posts.db'
+
+# === アップロード設定 ===
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'pdf'}
+MAX_CONTENT_LENGTH_MB = 10  # ← サイズ制限（MB単位）
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH_MB * 1024 * 1024  # 10MB
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+DB_PATH = 'posts.db'
 
 # === 卒業要件読み込み ===
 with open('requirements.json', 'r', encoding='utf-8') as f:
@@ -43,11 +48,12 @@ def init_forum_db():
     conn.commit()
     conn.close()
 
-# === 履修単位チェック用 ===
+# === ルート：トップページ ===
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# === 単位チェック関連 ===
 @app.route('/check', methods=['POST'])
 def check():
     grade = request.form['grade']
@@ -58,23 +64,23 @@ def check():
 def result():
     grade = request.form['grade']
     requirements = REQUIREMENTS.get(grade, {})
-
     user_credits = {}
+
     for i in range(len(requirements)):
         category = request.form.get(f'category_{i}')
         credit = int(request.form.get(f'credits_{i}', 0))
         user_credits[category] = credit
 
-    deficiencies = {}
-    for category, required in requirements.items():
-        actual = user_credits.get(category, 0)
-        if actual < required:
-            deficiencies[category] = required - actual
+    deficiencies = {
+        category: required - user_credits.get(category, 0)
+        for category, required in requirements.items()
+        if user_credits.get(category, 0) < required
+    }
 
     return render_template('result.html', grade=grade, requirements=requirements,
                            user_credits=user_credits, deficiencies=deficiencies)
 
-# === 講義掲示板 ===
+# === 掲示板（講義評価） ===
 def get_board_posts():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -102,7 +108,7 @@ def post():
     conn.close()
     return redirect('/board')
 
-# === 数学フリートーク機能 ===
+# === 数学フリートーク（PDF付き） ===
 def get_forum_posts():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -137,9 +143,13 @@ def post_forum():
     conn.close()
     return redirect('/forum')
 
-# === アプリ起動時にDB初期化 ===
+# === サイズ超過時のエラーハンドラー ===
+@app.errorhandler(413)
+def file_too_large(e):
+    return "アップロードできるPDFの最大サイズは10MBです。", 413
+
+# === アプリ起動時 ===
 if __name__ == '__main__':
     init_board_db()
     init_forum_db()
     app.run(debug=True)
-
