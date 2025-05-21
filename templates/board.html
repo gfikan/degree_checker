@@ -1,31 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}講義掲示板{% endblock %}
-
 {% block content %}
+  <h1>講義掲示板</h1>
+
   <form action="/post" method="post">
-    <label>講義名:</label>
-    <input type="text" name="title" required>
+    <label>講義名:</label><br>
+    <input type="text" name="title" required><br><br>
 
-    <label>コメント:</label>
-    <textarea name="comment" rows="4" required></textarea>
+    <label>評価 (1〜5):</label><br>
+    <input type="number" name="rating" min="1" max="5" required><br><br>
 
-    <label>評価（1〜5）:</label>
-    <input type="number" name="rating" min="1" max="5">
+    <label>コメント:</label><br>
+    <textarea name="comment" rows="4" cols="50" required></textarea><br><br>
 
-    <input type="submit" value="投稿">
+    <button type="submit">投稿する</button>
   </form>
 
   <hr>
 
-  <h2>投稿一覧</h2>
-  {% for post in posts %}
-    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-      <strong>講義名:</strong> {{ post['title'] }}<br>
-      <strong>評価:</strong> {{ post['rating'] }} / 5<br>
-      <strong>コメント:</strong><br> {{ post['comment'] }}
-    </div>
+  {% if posts %}
+    <ul>
+      {% for post in posts %}
+        <li style="border: 1px solid #ccc; border-radius: 6px; padding: 1em; margin-bottom: 1em;">
+          <strong>📘 {{ post[1] }}</strong>（評価: {{ post[3] }} / 5）<br>
+          <p>{{ post[2] }}</p>
+        </li>
+      {% endfor %}
+    </ul>
   {% else %}
     <p>まだ投稿はありません。</p>
-  {% endfor %}
+  {% endif %}
 {% endblock %}
