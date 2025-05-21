@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}数学フリートーク{% endblock %}
+{% block content %}
+
+<h2>数学フリートーク</h2>
+<form action="/post_forum" method="post" enctype="multipart/form-data">
+    <label>議論内容（Markdownや数式もOK）:</label>
+    <textarea name="content" rows="5" required></textarea><br>
+
+    <label>PDFを添付（任意）:</label>
+    <input type="file" name="pdf" accept=".pdf"><br><br>
+
+    <input type="submit" value="投稿する">
+</form>
+
+<hr>
+<h3>投稿一覧</h3>
+{% for post in posts %}
+  <div style="margin-bottom: 1em; padding: 1em; border: 1px solid #ccc;">
+    <p>{{ post['content'] }}</p>
+    {% if post['pdf_filename'] %}
+      <a href="{{ url_for('static', filename='uploads/' + post['pdf_filename']) }}" target="_blank">
+        📄 PDFを見る
+      </a>
+    {% endif %}
+  </div>
+{% else %}
+  <p>投稿がまだありません。</p>
+{% endfor %}
+
+{% endblock %}
