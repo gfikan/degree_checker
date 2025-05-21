@@ -15,6 +15,7 @@ https://niigata-univ-degree-checker.onrender.com
 - 自分の修得単位数を項目に従って入力
 - 学科の卒業要件PDF（2025年版）に基づいて自動判定
 - 必要単位に対して足りない科目・区分を一覧表示
+- 先輩が書いた講義の感想や評価が見れる掲示板機能
 - Webブラウザ上で簡単に利用可能（Flask + HTML）
 
 
@@ -94,6 +95,9 @@ degree-checker/
 
 ## 🙋‍♂️ 制作
 東京科学大学情報理工学院数理・計算科学系　Keito Shimomine（下峰渓人）
+
+
+
 
 開発・お問い合わせは GitHub Issues まで。
 
