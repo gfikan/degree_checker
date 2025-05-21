@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>講義掲示板</title>
+</head>
+<body>
+    <h1>講義掲示板</h1>
+
+    <form action="/post" method="post">
+        <label>講義名:</label><br>
+        <input type="text" name="title" required><br>
+
+        <label>コメント:</label><br>
+        <textarea name="comment" rows="4" cols="40" required></textarea><br>
+
+        <label>評価（1〜5）:</label><br>
+        <input type="number" name="rating" min="1" max="5"><br><br>
+
+        <input type="submit" value="投稿">
+    </form>
+
+    <hr>
+
+    <h2>投稿一覧</h2>
+    {% if posts %}
+        {% for post in posts %}
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <strong>講義名:</strong> {{ post.title }}<br>
+                <strong>評価:</strong> {{ post.rating }} / 5<br>
+                <strong>コメント:</strong><br> {{ post.comment }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>まだ投稿はありません。</p>
+    {% endif %}
+</body>
+</html>

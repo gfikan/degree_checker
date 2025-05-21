@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>学年選択</title>
-</head>
+<head><meta charset="utf-8"><title>トップ</title></head>
 <body>
-    <h2>学年を選択してください</h2>
+    <h1>新潟大学 単位チェッカー & 掲示板</h1>
     <form action="/check" method="post">
-        <select name="grade">
+        <label>学年を選んでください：</label>
+        <select name="grade" required>
             <option value="1">1年</option>
             <option value="2">2年</option>
             <option value="3">3年</option>
             <option value="4">4年</option>
         </select>
-        <button type="submit">次へ</button>
+        <button type="submit">履修単位チェックへ</button>
     </form>
+
+    <hr>
+
+    <a href="/board">📚 講義掲示板を開く</a>
 </body>
 </html>
 
