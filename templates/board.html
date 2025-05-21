@@ -21,9 +21,9 @@
   <h2>投稿一覧</h2>
   {% for post in posts %}
     <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-      <strong>講義名:</strong> {{ post.title }}<br>
-      <strong>評価:</strong> {{ post.rating }} / 5<br>
-      <strong>コメント:</strong><br> {{ post.comment }}
+      <strong>講義名:</strong> {{ post['title'] }}<br>
+      <strong>評価:</strong> {{ post['rating'] }} / 5<br>
+      <strong>コメント:</strong><br> {{ post['comment'] }}
     </div>
   {% else %}
     <p>まだ投稿はありません。</p>
