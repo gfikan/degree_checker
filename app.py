@@ -30,6 +30,10 @@ def get_posts():
     conn.close()
     return posts
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/board')
 def board():
     posts = get_posts()
