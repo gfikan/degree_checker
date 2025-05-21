@@ -1,22 +1,23 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
+from supabase import create_client, Client
 import os
 import psycopg2
 import json
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
+import uuid
 
 # === 初期設定 ===
 load_dotenv()
 app = Flask(__name__)
 
-# PDFアップロード設定
-UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = {'pdf'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB制限
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# Supabase Storage設定
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
+SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-# Supabase接続関数
+# PostgreSQL 接続用関数
 def get_db_connection():
     return psycopg2.connect(
         host=os.getenv("SUPABASE_HOST"),
@@ -97,7 +98,13 @@ def post():
 
 # ====================================
 # 💬 フリートーク掲示板（forum_posts）
+# Supabase StorageへPDFアップロード版
 # ====================================
+
+ALLOWED_EXTENSIONS = {'pdf'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/forum')
 def forum():
@@ -113,17 +120,22 @@ def forum():
 def post_forum():
     content = request.form['content']
     pdf = request.files.get('pdf')
-    filename = None
+    pdf_url = None
 
     if pdf and allowed_file(pdf.filename):
         filename = secure_filename(pdf.filename)
-        pdf.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        unique_name = f"{uuid.uuid4()}_{filename}"
+        file_data = pdf.read()
+
+        # Supabase Storageにアップロード
+        supabase.storage.from_(SUPABASE_BUCKET).upload(unique_name, file_data, {"content-type": "application/pdf"})
+        pdf_url = f"{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_BUCKET}/{unique_name}"
 
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
         "INSERT INTO forum_posts (content, pdf_filename) VALUES (%s, %s)",
-        (content, filename)
+        (content, pdf_url)
     )
     conn.commit()
     cur.close()
@@ -131,18 +143,15 @@ def post_forum():
     return redirect('/forum')
 
 # ====================================
-# 🔎 ヘルパー・エラーハンドラ
+# エラーハンドラ
 # ====================================
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @app.errorhandler(413)
 def file_too_large(e):
     return "アップロードできるPDFの最大サイズは10MBです。", 413
 
 # ====================================
-# 🚀 アプリ起動
+# アプリ起動
 # ====================================
 if __name__ == '__main__':
     app.run(debug=True)
+
