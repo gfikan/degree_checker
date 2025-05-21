@@ -1,31 +1,29 @@
 {% extends "base.html" %}
-{% block title %}数学フリートーク{% endblock %}
+
 {% block content %}
+  <h1>数学フリートーク</h1>
 
-<h2>数学フリートーク</h2>
-<form action="/post_forum" method="post" enctype="multipart/form-data">
-    <label>議論内容（Markdownや数式もOK）:</label>
-    <textarea name="content" rows="5" required></textarea><br>
+  <form action="/post_forum" method="post" enctype="multipart/form-data">
+    <textarea name="content" rows="4" cols="60" placeholder="自由に書いてください" required></textarea><br>
+    <label>PDF添付（任意）:</label>
+    <input type="file" name="pdf" accept=".pdf"><br>
+    <button type="submit">投稿</button>
+  </form>
 
-    <label>PDFを添付（任意）:</label>
-    <input type="file" name="pdf" accept=".pdf"><br><br>
+  <hr>
 
-    <input type="submit" value="投稿する">
-</form>
-
-<hr>
-<h3>投稿一覧</h3>
-{% for post in posts %}
-  <div style="margin-bottom: 1em; padding: 1em; border: 1px solid #ccc;">
-    <p>{{ post['content'] }}</p>
-    {% if post['pdf_filename'] %}
-      <a href="{{ url_for('static', filename='uploads/' + post['pdf_filename']) }}" target="_blank">
-        📄 PDFを見る
-      </a>
-    {% endif %}
-  </div>
-{% else %}
-  <p>投稿がまだありません。</p>
-{% endfor %}
-
+  {% if posts %}
+    <ul>
+      {% for post in posts %}
+        <li style="margin-bottom: 1em; padding: 0.5em; border: 1px solid #ccc; border-radius: 6px;">
+          <p>{{ post[1] }}</p>  <!-- content -->
+          {% if post[2] %}
+            <a href="{{ url_for('static', filename='uploads/' + post[2]) }}" target="_blank">📄 添付PDF</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>まだ投稿はありません。</p>
+  {% endif %}
 {% endblock %}
