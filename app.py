@@ -24,6 +24,38 @@ def get_db_connection():
         password=os.getenv("SUPABASE_PASSWORD"),
         port=os.getenv("SUPABASE_PORT")
     )
+with open('requirements.json', 'r', encoding='utf-8') as f:
+    REQUIREMENTS = json.load(f)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/check', methods=['POST'])
+def check():
+    grade = request.form['grade']
+    requirements = REQUIREMENTS.get(grade, {})
+    return render_template('input_credits.html', grade=grade, requirements=requirements)
+
+@app.route('/result', methods=['POST'])
+def result():
+    grade = request.form['grade']
+    requirements = REQUIREMENTS.get(grade, {})
+
+    user_credits = {}
+    for i in range(len(requirements)):
+        category = request.form.get(f'category_{i}')
+        credit = int(request.form.get(f'credits_{i}', 0))
+        user_credits[category] = credit
+
+    deficiencies = {}
+    for category, required in requirements.items():
+        actual = user_credits.get(category, 0)
+        if actual < required:
+            deficiencies[category] = required - actual
+
+    return render_template('result.html', grade=grade, requirements=requirements,
+                           user_credits=user_credits, deficiencies=deficiencies)
 
 # ====================================
 # 🎓 掲示板機能（posts）
