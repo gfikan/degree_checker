@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
 import psycopg2
+import json
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 
