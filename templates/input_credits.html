@@ -1,22 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>履修状況入力</title>
-</head>
-<body>
-    <h2>{{ grade }}年の卒業要件</h2>
+{% extends "base.html" %}
 
-    <form action="/result" method="post">
-        <input type="hidden" name="grade" value="{{ grade }}">
-        <p>以下にあなたの履修済み単位を入力してください：</p>
+{% block title %}履修単位の入力{% endblock %}
 
-        {% for category, required in requirements.items() %}
-            <label>{{ category }}（必要 {{ required }} 単位）:</label>
-            <input type="number" name="credits_{{ loop.index0 }}" min="0" required><br>
-            <input type="hidden" name="category_{{ loop.index0 }}" value="{{ category }}">
-        {% endfor %}
+{% block content %}
+  <h2>{{ grade }}年生：履修単位を入力してください</h2>
 
-        <button type="submit">判定</button>
-    </form>
-</body>
-</html>
+  <form action="/result" method="post">
+    <input type="hidden" name="grade" value="{{ grade }}">
+
+    {% for category, required in requirements.items() %}
+      <label>{{ category }}（必要 {{ required }} 単位）:</label>
+      <input type="number" name="credits_{{ loop.index0 }}" min="0" required>
+      <input type="hidden" name="category_{{ loop.index0 }}" value="{{ category }}">
+    {% endfor %}
+
+    <input type="hidden" name="total_fields" value="{{ requirements|length }}">
+    <input type="submit" value="▶ 判定する">
+  </form>
+{% endblock %}
+

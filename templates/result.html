@@ -1,25 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>判定結果</title>
-</head>
-<body>
-    <h2>{{ grade }}年の単位取得状況</h2>
+{% extends "base.html" %}
 
-    <ul>
-    {% for category, info in status.items() %}
-        <li>
-            {{ category }}：
-            取得 {{ info.earned }} / 必要 {{ info.required }} 単位 →
-            {% if info.met %}
-                ✅ 達成
-            {% else %}
-                ❌ 不足
-            {% endif %}
-        </li>
+{% block title %}判定結果{% endblock %}
+
+{% block content %}
+  <h2>{{ grade }}年生の履修結果</h2>
+
+  <ul>
+    {% for category, required in requirements.items() %}
+      <li>
+        <strong>{{ category }}</strong>：
+        {{ user_credits.get(category, 0) }} / {{ required }} 単位
+        {% if deficiencies.get(category) %}
+          → ❌ 不足（あと {{ deficiencies[category] }} 単位）
+        {% else %}
+          → ✅ 達成
+        {% endif %}
+      </li>
     {% endfor %}
-    </ul>
+  </ul>
 
-</body>
-</html>
+  <a href="/">トップページへ戻る</a>
+{% endblock %}
 

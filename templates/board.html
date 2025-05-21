@@ -1,38 +1,31 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>講義掲示板</title>
-</head>
-<body>
-    <h1>講義掲示板</h1>
+{% extends "base.html" %}
 
-    <form action="/post" method="post">
-        <label>講義名:</label><br>
-        <input type="text" name="title" required><br>
+{% block title %}講義掲示板{% endblock %}
 
-        <label>コメント:</label><br>
-        <textarea name="comment" rows="4" cols="40" required></textarea><br>
+{% block content %}
+  <form action="/post" method="post">
+    <label>講義名:</label>
+    <input type="text" name="title" required>
 
-        <label>評価（1〜5）:</label><br>
-        <input type="number" name="rating" min="1" max="5"><br><br>
+    <label>コメント:</label>
+    <textarea name="comment" rows="4" required></textarea>
 
-        <input type="submit" value="投稿">
-    </form>
+    <label>評価（1〜5）:</label>
+    <input type="number" name="rating" min="1" max="5">
 
-    <hr>
+    <input type="submit" value="投稿">
+  </form>
 
-    <h2>投稿一覧</h2>
-    {% if posts %}
-        {% for post in posts %}
-            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                <strong>講義名:</strong> {{ post.title }}<br>
-                <strong>評価:</strong> {{ post.rating }} / 5<br>
-                <strong>コメント:</strong><br> {{ post.comment }}
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>まだ投稿はありません。</p>
-    {% endif %}
-</body>
-</html>
+  <hr>
+
+  <h2>投稿一覧</h2>
+  {% for post in posts %}
+    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+      <strong>講義名:</strong> {{ post.title }}<br>
+      <strong>評価:</strong> {{ post.rating }} / 5<br>
+      <strong>コメント:</strong><br> {{ post.comment }}
+    </div>
+  {% else %}
+    <p>まだ投稿はありません。</p>
+  {% endfor %}
+{% endblock %}
