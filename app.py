@@ -25,8 +25,14 @@ def get_db_connection():
         password=os.getenv("SUPABASE_PASSWORD"),
         port=os.getenv("SUPABASE_PORT")
     )
+
+# 卒業要件を読み込む
 with open('requirements.json', 'r', encoding='utf-8') as f:
     REQUIREMENTS = json.load(f)
+
+# ====================================
+# 🎓 卒業要件チェック
+# ====================================
 
 @app.route('/')
 def index():
@@ -59,7 +65,7 @@ def result():
                            user_credits=user_credits, deficiencies=deficiencies)
 
 # ====================================
-# 🎓 掲示板機能（posts）
+# 📋 講義掲示板（posts）
 # ====================================
 
 @app.route('/board')
@@ -124,24 +130,19 @@ def post_forum():
     conn.close()
     return redirect('/forum')
 
-# ファイル拡張子チェック
+# ====================================
+# 🔎 ヘルパー・エラーハンドラ
+# ====================================
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# アップロードサイズ超過時のエラー表示
 @app.errorhandler(413)
 def file_too_large(e):
     return "アップロードできるPDFの最大サイズは10MBです。", 413
 
 # ====================================
-# 🌐 トップページ（リンクのみ）
-# ====================================
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-# ====================================
-# アプリ起動
+# 🚀 アプリ起動
 # ====================================
 if __name__ == '__main__':
     app.run(debug=True)
