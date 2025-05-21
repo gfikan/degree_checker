@@ -7,3 +7,6 @@ __pycache__/
 # アップロードされたファイル（PDF）
 static/uploads/*
 !static/uploads/.gitkeep
+
+# SQLiteデータベースをGitから除外（投稿内容）
+posts.db
