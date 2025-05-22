@@ -19,10 +19,10 @@
     <ul style="list-style: none; padding: 0;">
       {% for post in posts %}
         <li style="background: #f0f0f0; padding: 1em; margin-bottom: 1em; border-radius: 8px;">
-          <p>{{ post[0] | e }}</p> <!-- content -->
+          <p><strong>投稿内容：</strong>{{ post[1] | e }}</p>
 
-          {% if post[1] %}
-            <p><a href="{{ post[1] }}" target="_blank" style="color: blue;">📄 添付PDFを開く</a></p>
+          {% if post[2] %}
+            <p><a href="{{ post[2] }}" target="_blank" style="color: blue;">📄 添付PDFを開く</a></p>
           {% endif %}
         </li>
       {% endfor %}
@@ -31,4 +31,5 @@
     <p>まだ投稿はありません。</p>
   {% endif %}
 {% endblock %}
+
 
