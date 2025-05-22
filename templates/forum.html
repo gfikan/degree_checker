@@ -1,24 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>数学フリートーク</h1>
+  <h1>数学フリートーク掲示板</h1>
 
-  <form action="/post_forum" method="post" enctype="multipart/form-data">
-    <textarea name="content" rows="4" cols="60" placeholder="自由に書いてください" required></textarea><br>
-    <label>PDF添付（任意）:</label>
-    <input type="file" name="pdf" accept=".pdf"><br>
-    <button type="submit">投稿</button>
+  <form action="/post_forum" method="post" enctype="multipart/form-data" style="margin-bottom: 2em;">
+    <label for="content">投稿内容:</label><br>
+    <textarea id="content" name="content" rows="4" cols="60" placeholder="自由に書いてください" required></textarea><br><br>
+
+    <label for="pdf">PDF添付（任意）:</label><br>
+    <input type="file" id="pdf" name="pdf" accept=".pdf"><br><br>
+
+    <button type="submit">投稿する</button>
   </form>
 
   <hr>
 
   {% if posts %}
-    <ul>
+    <ul style="list-style: none; padding: 0;">
       {% for post in posts %}
-        <li style="margin-bottom: 1em; padding: 0.5em; border: 1px solid #ccc; border-radius: 6px;">
-          <p>{{ post[1] }}</p>  <!-- content -->
-          {% if post[2] %}
-            <a href="{{ url_for('static', filename='uploads/' + post[2]) }}" target="_blank">📄 添付PDF</a>
+        <li style="background: #f0f0f0; padding: 1em; margin-bottom: 1em; border-radius: 8px;">
+          <p>{{ post[0] | e }}</p> <!-- content -->
+
+          {% if post[1] %}
+            <p><a href="{{ post[1] }}" target="_blank" style="color: blue;">📄 添付PDFを開く</a></p>
           {% endif %}
         </li>
       {% endfor %}
