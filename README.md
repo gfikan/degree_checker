@@ -64,19 +64,71 @@ python app.py
 ## 📁 ディレクトリ構成（例）
 ```bash
 degree-checker/
-├── app.py
-├── requirements.txt
-├── templates/
-│   └── index.html
+├── app.py                         # Flask本体（Supabase対応済み）
+├── requirements.txt              # 依存パッケージ
+├── requirements.json             # 卒業要件（学年別）
+├── .env                          # 環境変数（Supabase接続設定）
+├── .gitignore                    # アップロードファイル・仮想環境を除外
+│
+├── templates/                    # HTMLテンプレート群
+│   ├── base.html                 # 共通レイアウト（ヘッダー・ナビゲーション）
+│   ├── index.html                # 学年選択ページ
+│   ├── input_credits.html        # 履修単位入力ページ
+│   ├── result.html               # 判定結果表示
+│   ├── board.html                # 講義掲示板ページ
+│   └── forum.html                # 数学フリートークページ（PDF添付あり）
+│
 ├── static/
-│   └── style.css
-├── .gitignore
-├── README.md
-└── data/
-    └── sample_transcript.csv
+│   └── uploads/                  # ← PDF保存ディレクトリ（現在は未使用、Supabase使用）
+│       └── .gitkeep             # フォルダをgitに保持させる
+│
+└── Procfile                      # Render用： `web: gunicorn app:app`
 
 ```
+## .envの内容
+```bash
 
+# Supabase
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_KEY=your-service-role-key
+SUPABASE_BUCKET=pdf-uploads
+
+# PostgreSQL（Render用）
+SUPABASE_HOST=db.your-project-ref.supabase.co
+SUPABASE_DB=postgres
+SUPABASE_USER=postgres
+SUPABASE_PASSWORD=your-password
+SUPABASE_PORT=5432
+
+```
+## .gitignoreの内容（アップロード除外）
+```bash
+
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+
+# アップロードされたファイル（PDF）
+static/uploads/*
+!static/uploads/.gitkeep
+
+# SQLiteデータベースをGitから除外（投稿内容）
+posts.db
+
+```
+## requirements.txt（必要パッケージ）
+```bash
+
+Flask
+gunicorn
+python-dotenv
+psycopg2-binary
+supabase
+
+
+```
 ## 📝 TODO（今後の改良案）
 履修済みデータの保存機能
 
