@@ -1,7 +1,8 @@
-# 🎓 新潟大学 理学部 数学プログラム 卒業要件チェッカー
+# 🎓 新潟大学 理学部 数学プログラム 基本情報システム
 
 このWebアプリは、新潟大学理学部 数学プログラムの学生が、  
 **自分の履修済み科目と卒業要件を照合して、単位不足を自動チェック**できるツールです。
+**数学フリートークや講義掲示板**も実装しました
 
 ---
 
@@ -16,6 +17,7 @@ https://niigata-univ-degree-checker.onrender.com
 - 各学年の卒業要件PDFに基づいて自動判定
 - 必要単位に対して足りない科目・区分を一覧表示
 - 先輩が書いた講義の感想や評価が見れる掲示板機能
+- 数学フリートーク掲示板機能
 - Webブラウザ上で簡単に利用可能（Flask + HTML）
 
 
@@ -23,11 +25,13 @@ https://niigata-univ-degree-checker.onrender.com
 
 | 技術        | 用途                   |
 |-------------|------------------------|
-| Python      | バックエンド処理       |
-| Flask       | Webフレームワーク      |
+| Python      | バックエンド処理        |
+| Flask       | Webフレームワーク       |
 | HTML/CSS    | UI・テンプレート表示    |
 | Jinja2      | 画面テンプレートエンジン |
 | VSCode      | 開発環境               |
+| Supabase    | データベース            |
+| Render      |　デプロイ               |
 
 ---
 
@@ -35,11 +39,11 @@ https://niigata-univ-degree-checker.onrender.com
 ### 1. 仮想環境の作成と有効化（推奨）
 
 ```bash
-python -m venv degree
+python -m venv degree_check
 # Windows:
-degree\Scripts\activate
+.\degree_check\Scripts\activate
 # macOS/Linux:
-source degree/bin/activate
+source degree_check/bin/activate
 
 ```
 
@@ -90,6 +94,8 @@ degree-checker/
 自分の卒業要件達成状況をすぐに確認したい方
 
 履修管理を効率化したい学生全般
+
+数学のフリートークがしたい方
 
 ---
 
