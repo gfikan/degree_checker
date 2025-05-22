@@ -11,4 +11,3 @@ static/uploads/*
 # SQLiteデータベースをGitから除外（投稿内容）
 posts.db
 
-.env
