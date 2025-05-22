@@ -69,44 +69,83 @@
   {% block content %}
   {% endblock %}
 
-  <div id="polyhedron-container" style="width: 100%; height: 300px; margin-top: 100px;"></div>
+  <style>
+  .section-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 2em;
+  }
 
+  .item {
+    width: 48%;
+    text-align: center;
+    color: white;
+  }
+
+  .canvas-box {
+    width: 100%;
+    height: 300px;
+    position: relative;
+  }
+</style>
+
+<div class="section-container">
+  <!-- 左：講義掲示板 -->
+  <div class="item">
+    <h2><a href="/board" style="color: #00ffff; text-decoration: none;">📘 講義掲示板</a></h2>
+    <div id="icosahedron-container" class="canvas-box"></div>
+  </div>
+
+  <!-- 右：数学フリートーク -->
+  <div class="item">
+    <h2><a href="/forum" style="color: #ffaaff; text-decoration: none;">💬 数学フリートーク</a></h2>
+    <div id="torus-container" class="canvas-box"></div>
+  </div>
+</div>
+
+<!-- Three.js CDN & 回転表示スクリプト -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/build/three.min.js"></script>
 <script>
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 300, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ alpha: true });
-  renderer.setSize(window.innerWidth, 300);
-  document.getElementById("polyhedron-container").appendChild(renderer.domElement);
+  function createScene(containerId, geometry, material, rotateX = 0.01, rotateY = 0.01) {
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(300, 300);
 
-  // 回転する Icosahedron（20面体）
-  const icosaGeometry = new THREE.IcosahedronGeometry(1, 0);
-  const icosaMaterial = new THREE.MeshNormalMaterial({ wireframe: true });
-  const icosahedron = new THREE.Mesh(icosaGeometry, icosaMaterial);
-  scene.add(icosahedron);
+    const container = document.getElementById(containerId);
+    container.appendChild(renderer.domElement);
 
-  // トーラス（ドーナツ形）
-  const torusGeometry = new THREE.TorusGeometry(1.5, 0.1, 16, 100);
-  const torusMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true });
-  const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-  scene.add(torus);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    camera.position.z = 4;
 
-  camera.position.z = 5;
-
-  // 回転アニメーション
-  function animate() {
-    requestAnimationFrame(animate);
-    
-    icosahedron.rotation.x += 0.01;
-    icosahedron.rotation.y += 0.01;
-
-    torus.rotation.x += 0.005;
-    torus.rotation.z += 0.01;
-
-    renderer.render(scene, camera);
+    function animate() {
+      requestAnimationFrame(animate);
+      mesh.rotation.x += rotateX;
+      mesh.rotation.y += rotateY;
+      renderer.render(scene, camera);
+    }
+    animate();
   }
-  animate();
+
+  // 左：Icosahedron（講義掲示板）
+  createScene(
+    "icosahedron-container",
+    new THREE.IcosahedronGeometry(1, 0),
+    new THREE.MeshNormalMaterial({ wireframe: true }),
+    0.01, 0.01
+  );
+
+  // 右：Torus（数学フリートーク）
+  createScene(
+    "torus-container",
+    new THREE.TorusGeometry(1.3, 0.2, 16, 100),
+    new THREE.MeshBasicMaterial({ color: 0xff66cc, wireframe: true }),
+    0.005, 0.015
+  );
 </script>
+
 
 </body>
 </html>
